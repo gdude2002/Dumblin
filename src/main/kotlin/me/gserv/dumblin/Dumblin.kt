@@ -8,6 +8,7 @@ import me.gserv.dumblin.listeners.MessageListener
 import mu.KotlinLogging
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
+import net.dv8tion.jda.api.entities.Activity
 import java.io.File
 import kotlin.system.exitProcess
 
@@ -50,7 +51,9 @@ fun main() {
 
     config = loadedConfig  // So it's available in other parts of the application
 
-    val client = CommandClientBuilder().setPrefix("!")
+    val client = CommandClientBuilder()
+        .setActivity(Activity.listening("people coughing"))
+        .setPrefix("!")
         .setOwnerId(config.ownerId.toString())
         .build()
 
