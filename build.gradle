@@ -1,0 +1,79 @@
+plugins {
+    id 'java'
+
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
+
+    id 'org.jetbrains.kotlin.jvm' version '1.3.61'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.3.61'
+}
+
+group 'me.gserv.dumblin'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    jcenter()
+    mavenCentral()
+
+    maven {
+        name "Sonatype (Public)"
+        url "http://oss.sonatype.org/content/groups/public/"
+    }
+}
+
+sourceSets {
+    main.java.srcDirs += 'src/main/kotlin/'
+    test.java.srcDirs += 'src/test/kotlin/'
+}
+
+dependencies {
+    compile 'ch.qos.logback:logback-classic:1.3.0-alpha5'
+    compile 'com.charleskorn.kaml:kaml:0.15.0'
+    compile 'com.github.kittinunf.fuel:fuel:2.2.1'
+    compile 'com.github.kittinunf.fuel:fuel-coroutines:2.2.1'
+    compile 'com.jagrosh:jda-utilities:3.0.2'
+    compile 'com.linkedin.urls:url-detector:0.1.17'
+    compile 'io.github.microutils:kotlin-logging:1.7.8'
+    compile 'net.dv8tion:JDA:4.0.0_39'
+    compile "org.snakeyaml:snakeyaml-engine:2.0"
+    compile "org.yaml:snakeyaml:1.26-SNAPSHOT"
+
+    compile 'org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0'
+    compile "org.jetbrains.kotlin:kotlin-reflect:1.3.61"
+    compile 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2'
+    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.3.2'
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+jar {
+    manifest { attributes "Main-Class": "me.gserv.dumblin.DumblinKt" }
+}
+
+shadowJar {
+    minimize {
+        exclude(dependency("ch.qos.logback:.*:.*"))
+        exclude(dependency("org.jetbrains.kotlin:kotlin-reflect:.*"))
+    }
+
+    configurations = [project.configurations.compile, project.configurations.runtime]
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier = 'sources'
+    from sourceSets.main.java.srcDirs
+}
+
+artifacts {
+    archives sourcesJar
+    archives shadowJar
+}

@@ -1,0 +1,5 @@
+# The bot token to use for authentication
+token: ""
+
+# Your user ID
+owner_id: 0
